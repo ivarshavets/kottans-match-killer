@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<!--[if lt IE 8]><html class="no-js ie6 oldie" lang="en"> <![endif]-->
+<!--[if IE 7]><html class="no-js ie7 oldie" lang="en"><![endif]-->
+<!--[if IE 8]><html class="no-js ie8 oldie" lang="en"><![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>MATCH KILLAR!</title>
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <link rel="stylesheet" href="stylesheets/foundation.css">
+  <link rel="stylesheet" href="stylesheets/style.css">
+
+  <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+  <script src="javascript/mustache.js"></script>
+  <script src="javascript/path.min.js"></script>
+  <script src="javascript/app.js"></script>
+
+</head>
+  <body>
+  <div class="loader"><img src="images/ajax-loader.gif" alt="AJAX loader animation"></div>
+
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1><a href="#">Hot Date!</a></h1>
+      </li>
+    </ul>
+
+    <section class="top-bar-section row">
+      <ul class="user_menu">
+        <li class="list_link"><a href="#list">List my dates!</a></li>
+        <li class="right"><a class="logout_link" href="#logout">Log out</a></li>
+      </ul>
+      <ul class="right auth_link">
+        <li class="active login_link"><a href="#login">Login</a></li>
+        <li class="signup_link"><a href="#signup">Signup</a></li>
+      </ul>
+    </section>
+  </nav>
+
+    <div id="login">
+        <div class="row">
+          <div class="column small-offset-1 small-10 large-offset-2 large-8">
+            <h1>Login</h1>
+            <form id="login_form" method="post" action="http://localhost:8888/login" class="small-8">
+              <input class="error" name="login" type="text" placeholder="enter your login">
+              <small class="error">Something went wrong!</small>
+              <input name="password" type="password" placeholder="enter your password">
+              <input type="submit" value="Log me in" class="button login">
+              <a href="" class="button secondary signup_link">Sign me up</a>
+            </form>
+          </div>
+        </div>
+    </div>
+
+    <div id="signup">
+      <div class="row">
+        <div class="column small-offset-1 small-10 large-offset-2 large-8">
+          <h1>Signup</h1>
+          <form id="signup_form" method="post" action="http://localhost:8888/signup" class="small-8">
+            <input class="error" name="login" type="text" placeholder="enter your login">
+            <small class="error">Something went wrong!</small>
+            <input name="email" type="email" placeholder="enter your email">
+            <input name="password" type="password" placeholder="enter your new password">
+            <input name="passwordConfirmation" type="password" placeholder="retype it">
+            <input type="submit" value="Let me in!" class="button">
+            <a href="" class="button secondary login_link">Nah, I do have an account already.</a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users list -->
+    <div id="list">
+      <ul class="small-block-grid-3 persons-list"></ul>
+    </div>
+
+    <!-- User details -->
+    <div id="show-full" class="row">
+      <div class="small-6 large-centered columns full-info"></div>
+    </div>
+
+
+<script id="userTempl" type="x-tmpl-mustache">
+  <li data-id="{{id}}">
+    <div class="person {{user.gender}}">
+      <a class='url n' href="#user/{{id}}"><i>{{user.name.title}}.</i> {{user.name.first}} {{user.name.last}}.</a>
+    </div>
+  </li>
+</script>
+
+<script id="userDetailsTempl" type="x-tmpl-mustache">
+  <h2>{{user.name.title}}. {{user.name.first}} {{user.name.last}}</h2>
+  <section>
+    <h3>Location</h3>
+    <p>{{user.location.street}}, {{user.location.city}}, {{user.location.state}}, {{user.location.zip}}</p>
+  </section>
+  <section>
+    <h3>Connect with him!</h3>
+    <a href="mailto:{{user.email}}">{{user.email}}</a>
+    <br/>
+    <br/>
+    <a href="tel:{{user.cell}}">{{user.cell}}</a>
+  </section>
+</script>
+
+  </body>
+</html>
