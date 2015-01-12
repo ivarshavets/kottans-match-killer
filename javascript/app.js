@@ -7,6 +7,9 @@
       url: API_URL + '/login',
       type: 'POST',
       dataType : "json",
+      beforeSend: function(){
+        cleanupError($('#login_form'));
+      },
       data: {
         login: login,
         password: pwd,
@@ -16,7 +19,7 @@
       Path.goTo('users');
     }).fail(function( jqXHR, textStatus, errorThrown ) {
       console.log(jqXHR);
-      showFormErrors();
+      showFormErrors(jqXHR, $('#login_form' ));
     });
   }
 
@@ -28,6 +31,9 @@
     $.ajax({
       url: API_URL + '/signup',
       type: 'POST',
+      beforeSend: function(){
+        cleanupError($('#signup_form'));
+      },
       dataType : "json",
       data: {
         login: login,
@@ -40,7 +46,7 @@
       Path.goTo('users');
     }).fail(function( jqXHR, textStatus, errorThrown ) {
       console.log(jqXHR);
-      showFormErrors();
+      showFormErrors(jqXHR, $('#signup_form'));
     });
   }
 
@@ -87,13 +93,23 @@
     });
   }
 
-  function hideFormErrors() {
-    $('small.error').hide();
-    $('input.error').removeClass('error');
+  function showFormErrors(jqXHR, form) {
+    if (jqXHR.responseJSON && jqXHR.responseJSON.errors) {
+
+      for (var i in jqXHR.responseJSON.errors) {
+        var error = jqXHR.responseJSON.errors[i];
+        for (var j in error) {
+          form.find('input[name='+ j +']').addClass('error').after('<small class="error">' + error[j] + '</small>');
+        }
+      }
+    } else if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
+      form.find('input:first').addClass('error').after('<small class="error">' + jqXHR.responseJSON.error + '</small>');
+    }
   }
 
-  function showFormErrors() {
-    console.log( "Error");
+  function cleanupError(form) {
+    form.find('small.error').remove();
+    form.find('input.error').removeClass('error');
   }
 
   function initUI() {
@@ -105,6 +121,7 @@
   function isLoggedIn(){
     return (sessionStorage.getItem("token") && sessionStorage.getItem("token").length > 0);
   }
+
 
 jQuery(function($){
 
@@ -155,7 +172,6 @@ jQuery(function($){
       $(".user_menu, #list, #show-full").show();
       $("#login, #signup, .auth_link").hide();
     } else {
-      hideFormErrors();
       $(".user_menu, #list, #show-full").hide();
       $("#login, #signup, .auth_link").show();
     }
@@ -167,19 +183,27 @@ jQuery(function($){
   };
 
   Path.map("#/login").to(function(){
-    ui();
-    $("#login").show();
-    $("#signup").hide();
-    $(".auth_link li").removeClass('active');
-    $('.login_link').addClass("active");
+    if (isLoggedIn()) {
+      Path.goTo("users");
+    } else {
+      ui();
+      $("#login").show();
+      $("#signup").hide();
+      $(".auth_link li").removeClass('active');
+      $('.login_link').addClass("active");
+    }
   });
 
   Path.map("#/signup").to(function(){
-    ui();
-    $("#login").hide();
-    $("#signup").show();
-    $(".auth_link li").removeClass('active');
-    $('.signup_link').addClass("active");
+    if (isLoggedIn()) {
+      Path.goTo("users");
+    } else {
+      ui();
+      $("#login").hide();
+      $("#signup").show();
+      $(".auth_link li").removeClass('active');
+      $('.signup_link').addClass("active");
+    }
   });
 
   Path.map("#/user/:id").to(function(){
@@ -191,16 +215,19 @@ jQuery(function($){
       user(this.params['id']);
     } else {
       Path.goTo("login");
-      ui();
     }
 
   });
 
   Path.map("#/users").to(function(){
-    ui();
-    usersList();
-    $(".user_menu li").removeClass('active');
-    $('.list_link').addClass("active");
+    if (isLoggedIn()) {
+      ui();
+      usersList();
+      $(".user_menu li").removeClass('active');
+      $('.list_link').addClass("active");
+    } else {
+      Path.goTo("login");
+    }
   });
 
   Path.rescue(function(){
@@ -216,6 +243,3 @@ jQuery(function($){
 
 
 });
-
-//asdfasdfasd.fasdfasdfadsf
-//123123
