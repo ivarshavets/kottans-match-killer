@@ -1,4 +1,1 @@
-kottans-match-killer
-====================
-
-kottans front-end course task
+front-end task
